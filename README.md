@@ -1,4 +1,12 @@
 # Actions on Google Canvas Plugin for RPG Maker
+**NOTE**
+
+This is an experimental project and will receive minimal maintenance. Only bugs for security issues will be accepted. No feature requests will be accepted. Pull requests will be acknowledged and reviewed as soon as possible. There is no associated SLAs.
+
+Some of the projects in this experimental org might mature to a more stable state and move into the main [Actions on Google GitHub org](https://github.com/actions-on-google).
+
+---
+
 This is a JavaScript plugin for [RPG Maker MV](http://www.rpgmakerweb.com/products/programs/rpg-maker-mv)
 which makes it easy to incorporate support for the Google Assistant with a zero-configuration
 plugin.
@@ -43,5 +51,23 @@ Your game will be saved to the specified file location.
     ```
 1. From the left navigation menu, click **Integrations** > **Integration Settings** under Google Assistant > Enable **Auto-preview changes** >  **Test** to open the Actions on Google simulator then say or type `Talk to my test app`.
 
-# LICENSE
-See `LICENSE`
+## References & Issues
+
+- Questions? Go to [StackOverflow](https://stackoverflow.com/questions/tagged/actions-on-google), [Assistant Developer Community on Reddit](https://www.reddit.com/r/GoogleAssistantDev/) or [Support](https://developers.google.com/actions/support/).
+- For bugs, please report an issue on Github.
+- Actions on Google [Interactive Canvas Documentation](https://developers.google.com/actions/canvas/)
+- Actions on Google [Documentation](https://developers.google.com/actions/extending-the-assistant)
+- Actions on Google [Codelabs](https://codelabs.developers.google.com/?cat=Assistant)
+- [Webhook Boilerplate Template](https://github.com/actions-on-google/dialogflow-webhook-boilerplate-nodejs) for Actions on Google
+
+## Make Contributions
+
+Please read and follow the steps in the [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+See [LICENSE](LICENSE).
+
+## Terms
+
+Your use of this sample is subject to, and by using or downloading the sample files you agree to comply with, the [Google APIs Terms of Service](https://developers.google.com/terms/).
