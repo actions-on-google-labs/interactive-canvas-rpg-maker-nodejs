@@ -22,25 +22,26 @@ const app = dialogflow({debug: true});
 app.middleware((conv, framework) => {
   // Get project ID and use it to obtain the host URL
   // This may need to change if the game is not hosted on Firebase
-  const functionUrl = framework.express.request.headers.host
+  const functionUrl = framework.express.request.headers.host;
   // us-central1-my-project-id.cloudfunctions.net
   // ->
   // my-project-id
-  conv.data.projectId = functionUrl.match(/us-central1-(.*)?\.cloudfunctions.net/)[1]
-})
+  conv.data.projectId = functionUrl
+      .match(/us-central1-(.*)?\.cloudfunctions.net/)[1];
+});
 
 app.intent('Default Welcome Intent', (conv) => {
   conv.ask('Welcome to the game!');
   conv.ask(new HtmlResponse({
     url: `https://${conv.data.projectId}.firebaseapp.com`,
-    suppress: true
+    suppress: true,
   }));
 });
 
 app.intent('Default Fallback Intent', (conv) => {
   conv.ask('I do not understand. Can you repeat?');
   conv.ask(new HtmlResponse({
-    data: {}
+    data: {},
   }));
 });
 
@@ -50,9 +51,9 @@ app.intent('Action Move', (conv, {direction, steps}) => {
     data: {
       move: {
         direction,
-        steps: parseInt(steps)
-      }
-    }
+        steps: parseInt(steps),
+      },
+    },
   }));
 });
 
@@ -60,11 +61,11 @@ app.intent('Menu selection', (conv, {index, text}) => {
   conv.ask('What do you do next?');
   conv.ask(new HtmlResponse({
     data: {
-       menu: {
+      menu: {
         index,
-        text
-       }
-    }
+        text,
+      },
+    },
   }));
 });
 
@@ -72,8 +73,8 @@ app.intent('Open menu', (conv) => {
   conv.ask('What do you do next?');
   conv.ask(new HtmlResponse({
     data: {
-      open: 'menu'
-    }
+      open: 'menu',
+    },
   }));
 });
 
@@ -81,8 +82,8 @@ app.intent('Close menu', (conv) => {
   conv.ask('What do you do next?');
   conv.ask(new HtmlResponse({
     data: {
-      close: true
-    }
+      close: true,
+    },
   }));
 });
 
@@ -90,8 +91,8 @@ app.intent('Next', (conv) => {
   conv.ask('What do you do next?');
   conv.ask(new HtmlResponse({
     data: {
-      command: 'enter'
-    }
+      command: 'enter',
+    },
   }));
 });
 
@@ -99,8 +100,8 @@ app.intent('Select', (conv) => {
   conv.ask('What do you do next?');
   conv.ask(new HtmlResponse({
     data: {
-      command: 'enter'
-    }
+      command: 'enter',
+    },
   }));
 });
 
@@ -108,8 +109,8 @@ app.intent('Close menu', (conv) => {
   conv.ask('What do you do next?');
   conv.ask(new HtmlResponse({
     data: {
-      command: 'close'
-    }
+      command: 'close',
+    },
   }));
 });
 
@@ -117,8 +118,8 @@ app.intent('Look direction', (conv, {direction}) => {
   conv.ask('What do you do next?');
   conv.ask(new HtmlResponse({
     data: {
-      direction
-    }
+      direction,
+    },
   }));
 });
 

@@ -46,48 +46,50 @@ const MOVEMENT_TIME = 250; // ms
            *     if < 0, move until we hit something
            *     default: -1
            *   direction:
-           *     'forward' or a number direction (2 - Down, 4 - Left, 6 - Right, 8 - Up)
+           *     'forward' or a number direction
+           *        (2 - Down, 4 - Left, 6 - Right, 8 - Up)
            * }
            */
-          state.move.steps = state.move.steps || -1
+          state.move.steps = state.move.steps || -1;
           if (state.move.steps > 0) {
             for (let i = 0; i < state.move.steps; i++) {
               setTimeout(() => {
                 if (state.move.direction === 'forward') {
-                  $gamePlayer.moveForward()
+                  $gamePlayer.moveForward();
                 } else {
-                  $gamePlayer.moveStraight(parseInt(state.move.direction))
+                  $gamePlayer.moveStraight(parseInt(state.move.direction));
                 }
-              }, i * MOVEMENT_TIME)
+              }, i * MOVEMENT_TIME);
             }
           } else if (state.move.steps < 0) {
             // Move until we hit something
             const stepInterval = setInterval(() => {
               if (state.move.direction === 'forward') {
-                $gamePlayer.moveForward()
+                $gamePlayer.moveForward();
               } else {
-                $gamePlayer.moveStraight(parseInt(state.move.direction))
+                $gamePlayer.moveStraight(parseInt(state.move.direction));
               }
               if (!$gamePlayer.isMovementSucceeded()) {
-                clearInterval(stepInterval)
+                clearInterval(stepInterval);
               }
-            }, MOVEMENT_TIME)
+            }, MOVEMENT_TIME);
           }
         }
         if ('direction' in state) {
           /**
            * {
-           *   direction: numerical direction (2 - Down, 4 - Left, 6 - Right, 8 - Up)
+           *   direction: numerical direction
+           *    (2 - Down, 4 - Left, 6 - Right, 8 - Up)
            * }
            */
-          $gamePlayer.setDirection(state.direction)
+          $gamePlayer.setDirection(state.direction);
         }
         if ('fallbackText' in state) {
           // Maybe this is related to a menu
           // Update the state and process it below
           state.menu = {
-            text: state.fallbackText
-          }
+            text: state.fallbackText,
+          };
         }
         if ('menu' in state) {
           /**
@@ -110,238 +112,243 @@ const MOVEMENT_TIME = 250; // ms
             let handler;
             if (SceneManager._scene._numberWindow &&
                 SceneManager._scene._numberWindow.active) {
-              // Used when selected a number of something, like number of items to buy/sell
-              commandWindow = SceneManager._scene._numberWindow
-              // Set the list to be a set of numbers between 0 and max items that can be bought
-              list = []
-              for (let i = 0; i <= SceneManager._scene._numberWindow._max; i++) {
+              // Used when selected a number of something,
+              // like number of items to buy/sell
+              commandWindow = SceneManager._scene._numberWindow;
+              // Set the list to be a set of numbers between
+              // 0 and max items that can be bought
+              list = [];
+              const max = SceneManager._scene._numberWindow._max;
+              for (let i = 0; i <= max; i++) {
                 list.push({
                   name: i.toString(),
-                  symbol: i.toString()
-                })
+                  symbol: i.toString(),
+                });
               }
               handler = (symbol) => {
-                SceneManager._scene._numberWindow._number = parseInt(symbol)
-                SceneManager._scene._numberWindow.drawNumber()
-              }
+                SceneManager._scene._numberWindow._number = parseInt(symbol);
+                SceneManager._scene._numberWindow.drawNumber();
+              };
             } else if (SceneManager._scene._buyWindow &&
                 SceneManager._scene._buyWindow.active) {
               // Buying items from a merchant
-              commandWindow = SceneManager._scene._buyWindow
-              list = commandWindow._data.map(buyItem => {
+              commandWindow = SceneManager._scene._buyWindow;
+              list = commandWindow._data.map((buyItem) => {
                 return {
                   name: buyItem.name,
-                  symbol: buyItem.symbol
-                }
-              })
+                  symbol: buyItem.symbol,
+                };
+              });
               handler = (_, symbolIndex) => {
-                commandWindow.select(symbolIndex)
-                commandWindow._handlers.ok()
-              }
+                commandWindow.select(symbolIndex);
+                commandWindow._handlers.ok();
+              };
             } else if (SceneManager._scene._sellWindow &&
                 SceneManager._scene._sellWindow.active) {
               // Selling items to a merchant
-              commandWindow = SceneManager._scene._sellWindow
-              list = commandWindow._data.map(sellItem => {
+              commandWindow = SceneManager._scene._sellWindow;
+              list = commandWindow._data.map((sellItem) => {
                 return {
                   name: sellItem.name,
-                  symbol: sellItem.symbol
-                }
-              })
+                  symbol: sellItem.symbol,
+                };
+              });
               handler = (_, symbolIndex) => {
-                commandWindow.select(symbolIndex)
-                commandWindow._handlers.ok()
-              }
+                commandWindow.select(symbolIndex);
+                commandWindow._handlers.ok();
+              };
             } else if (SceneManager._scene._commandWindow &&
                 SceneManager._scene._commandWindow.active) {
               // Title menu, in-game menu
-              commandWindow = SceneManager._scene._commandWindow
-              list = commandWindow._list
-              handler = (symbol) => commandWindow._handlers[symbol]()
+              commandWindow = SceneManager._scene._commandWindow;
+              list = commandWindow._list;
+              handler = (symbol) => commandWindow._handlers[symbol]();
             } else if (SceneManager._scene._enemyWindow &&
                 SceneManager._scene._enemyWindow.active) {
               // Select which enemy to target in-battle
-              commandWindow = SceneManager._scene._enemyWindow
-              list = commandWindow._enemies.map(enemy => {
+              commandWindow = SceneManager._scene._enemyWindow;
+              list = commandWindow._enemies.map((enemy) => {
                 return {
                   name: enemy.battlerName(),
-                  symbol: enemy.battlerName()
-                }
-              })
+                  symbol: enemy.battlerName(),
+                };
+              });
               handler = (_, symbolIndex) => {
-                commandWindow.select(symbolIndex)
-                commandWindow._handlers.ok()
+                commandWindow.select(symbolIndex);
+                commandWindow._handlers.ok();
                 // Mark window as inactive for next character
-                SceneManager._scene._enemyWindow.active = false
+                SceneManager._scene._enemyWindow.active = false;
                 // Mark windows as inactive for end of a turn
-                SceneManager._scene._actorCommandWindow.active = false
-                SceneManager._scene._partyCommandWindow.active = false
-              }
+                SceneManager._scene._actorCommandWindow.active = false;
+                SceneManager._scene._partyCommandWindow.active = false;
+              };
             } else if (SceneManager._scene._actorCommandWindow &&
                 SceneManager._scene._actorCommandWindow.active) {
               // Individual character battle menu
-              commandWindow = SceneManager._scene._actorCommandWindow
-              list = commandWindow._list
-              handler = (symbol) => commandWindow._handlers[symbol]()
+              commandWindow = SceneManager._scene._actorCommandWindow;
+              list = commandWindow._list;
+              handler = (symbol) => commandWindow._handlers[symbol]();
             } else if (SceneManager._scene._partyCommandWindow &&
                 SceneManager._scene._partyCommandWindow.active) {
               // Primary battle menu
-              commandWindow = SceneManager._scene._partyCommandWindow
-              list = commandWindow._list
-              handler = (symbol) => commandWindow._handlers[symbol]()
+              commandWindow = SceneManager._scene._partyCommandWindow;
+              list = commandWindow._list;
+              handler = (symbol) => commandWindow._handlers[symbol]();
               // Mark window as inactive to complete a turn
-              SceneManager._scene._partyCommandWindow.active = false
+              SceneManager._scene._partyCommandWindow.active = false;
             } else if (SceneManager._scene._categoryWindow &&
                 SceneManager._scene._categoryWindow.active) {
               // In-game item menu
-              commandWindow = SceneManager._scene._categoryWindow
-              list = commandWindow._list
+              commandWindow = SceneManager._scene._categoryWindow;
+              list = commandWindow._list;
               handler = (symbol) => {
-                commandWindow.selectSymbol(symbol)
-                commandWindow._handlers.ok()
-              }
+                commandWindow.selectSymbol(symbol);
+                commandWindow._handlers.ok();
+              };
             } else if (SceneManager._scene._skillTypeWindow &&
                 SceneManager._scene._skillTypeWindow.active) {
               // In-game skills type menu
-              commandWindow = SceneManager._scene._skillTypeWindow
-              list = commandWindow._list
-              handler = (symbol) => commandWindow._handlers[symbol]()
+              commandWindow = SceneManager._scene._skillTypeWindow;
+              list = commandWindow._list;
+              handler = (symbol) => commandWindow._handlers[symbol]();
             } else if (SceneManager._scene._messageWindow &&
                 SceneManager._scene._messageWindow._choiceWindow &&
                 SceneManager._scene._messageWindow._choiceWindow.active) {
               // Choice window, for selecting a choice
-              commandWindow = SceneManager._scene._messageWindow._choiceWindow
-              list = commandWindow._list
+              commandWindow = SceneManager._scene._messageWindow._choiceWindow;
+              list = commandWindow._list;
               handler = (_, symbolIndex) => {
-                commandWindow.select(symbolIndex)
-                commandWindow.processOk()
-              }
+                commandWindow.select(symbolIndex);
+                commandWindow.processOk();
+              };
             } else if (SceneManager._scene._itemWindow &&
                 SceneManager._scene._itemWindow.active) {
               // Item window, for selecting an item during in-game menu
-              commandWindow = SceneManager._scene._itemWindow
-              list = commandWindow._data.map(item => {
+              commandWindow = SceneManager._scene._itemWindow;
+              list = commandWindow._data.map((item) => {
                 return {
                   name: item.name,
-                  symbol: item.name
-                }
-              })
+                  symbol: item.name,
+                };
+              });
               handler = (_, symbolIndex) => {
-                commandWindow.select(symbolIndex)
-                commandWindow.processOk()
-              }
+                commandWindow.select(symbolIndex);
+                commandWindow.processOk();
+              };
             } else if (SceneManager._scene._messageWindow &&
                 SceneManager._scene._messageWindow._itemWindow &&
                 SceneManager._scene._messageWindow._itemWindow.active) {
               // Item window, for selecting an item during a message
-              commandWindow = SceneManager._scene._messageWindow._itemWindow
-              list = commandWindow._data.map(buyItem => {
+              commandWindow = SceneManager._scene._messageWindow._itemWindow;
+              list = commandWindow._data.map((buyItem) => {
                 return {
                   name: buyItem.name,
-                  symbol: buyItem.name
-                }
-              })
+                  symbol: buyItem.name,
+                };
+              });
               handler = (_, symbolIndex) => {
-                commandWindow.select(symbolIndex)
-                commandWindow.processOk()
-              }
+                commandWindow.select(symbolIndex);
+                commandWindow.processOk();
+              };
             } else if (SceneManager._scene._messageWindow &&
                 SceneManager._scene._messageWindow._numberWindow &&
                 SceneManager._scene._messageWindow._numberWindow.active) {
               // Number window, for selecting a number of something
-              commandWindow = SceneManager._scene._messageWindow._numberWindow
+              commandWindow = SceneManager._scene._messageWindow._numberWindow;
               // List is a series of numbers between 0 and 10^(Max Digits)
-              list = []
+              list = [];
               for (let i = 0; i < Math.pow(10, commandWindow._maxDigits); i++) {
                 list.push({
                   name: i.toString(),
-                  symbol: i.toString()
-                })
+                  symbol: i.toString(),
+                });
               }
               handler = (symbol) => {
-                // The only way one can manipulate this window is by incrementing/decrementing
-                const numberGoal = parseInt(symbol)
+                // The only way one can manipulate this window
+                // is by incrementing/decrementing
+                const numberGoal = parseInt(symbol);
                 if (commandWindow._number < numberGoal) {
                   // Increment until we get there
                   for (let i = commandWindow._number; i < numberGoal; i++) {
-                    commandWindow.changeDigit(true)
+                    commandWindow.changeDigit(true);
                   }
                 } else {
                   // Decrement until we get there
                   for (let i = commandWindow._number; i > numberGoal; i--) {
-                    commandWindow.changeDigit(false)
+                    commandWindow.changeDigit(false);
                   }
                 }
                 // Select this number
-                commandWindow.processOk()
-              }
+                commandWindow.processOk();
+              };
             } else if (SceneManager._scene._statusWindow &&
                 SceneManager._scene._statusWindow.active &&
                 !SceneManager._scene._statusWindow._actor) {
               // Selecting a user from the in-game menu
-              commandWindow = SceneManager._scene._statusWindow
-              list = $gameParty.allMembers().map(partyMember => {
+              commandWindow = SceneManager._scene._statusWindow;
+              list = $gameParty.allMembers().map((partyMember) => {
                 return {
                   name: partyMember._name,
-                  symbol: partyMember._name
-                }
-              })
+                  symbol: partyMember._name,
+                };
+              });
               handler = (_, symbolIndex) => {
-                commandWindow.select(symbolIndex)
-                commandWindow.processOk()
-              }
+                commandWindow.select(symbolIndex);
+                commandWindow.processOk();
+              };
             } else if (SceneManager._scene._actorWindow &&
                 SceneManager._scene._actorWindow.active) {
               // Selecting a user from a menu
-              commandWindow = SceneManager._scene._actorWindow
-              list = $gameParty.allMembers().map(partyMember => {
+              commandWindow = SceneManager._scene._actorWindow;
+              list = $gameParty.allMembers().map((partyMember) => {
                 return {
                   name: partyMember._name,
-                  symbol: partyMember._name
-                }
-              })
+                  symbol: partyMember._name,
+                };
+              });
               handler = (_, symbolIndex) => {
-                commandWindow.select(symbolIndex)
-                commandWindow.processOk()
-              }
+                commandWindow.select(symbolIndex);
+                commandWindow.processOk();
+              };
             } else if (SceneManager._scene._inputWindow &&
                 SceneManager._scene._inputWindow.active) {
-              SceneManager._scene._inputWindow._editWindow._name = state.menu.text
-              SceneManager._scene._inputWindow.processJump()
-              SceneManager._scene._inputWindow.processOk()
+              SceneManager._scene._inputWindow._editWindow._name =
+                state.menu.text;
+              SceneManager._scene._inputWindow.processJump();
+              SceneManager._scene._inputWindow.processOk();
               return; // Exit window
             }
 
             let symbol;
             let symbolIndex;
             for (let i = 0; i < list.length; i++) {
-              const label = list[i]
+              const label = list[i];
               if (label.name.toLowerCase() === state.menu.text) {
                 // This is an exact match
-                symbol = label.symbol
-                symbolIndex = i
+                symbol = label.symbol;
+                symbolIndex = i;
                 // Exit early
                 break;
               }
               if (label.name.toLowerCase().includes(state.menu.text) ||
-                state.menu.text.includes(label.name)) {
-                  symbol = label.symbol
-                  symbolIndex = i
+                  state.menu.text.includes(label.name)) {
+                symbol = label.symbol;
+                symbolIndex = i;
               }
             }
 
             try {
-              handler(symbol, symbolIndex)
+              handler(symbol, symbolIndex);
             } catch (e) {
-              console.error(e)
+              console.error(e);
             }
           } else if ('index' in state.menu) {
             // Select the menu index
-            const {symbol} = list[state.menu.index]
+            const {symbol} = list[state.menu.index];
             try {
-              handler(symbol)
+              handler(symbol);
             } catch (e) {
-              console.error(e)
+              console.error(e);
             }
           }
         }
@@ -355,7 +362,7 @@ const MOVEMENT_TIME = 250; // ms
            */
           switch (state.open) {
             case 'menu':
-              SceneManager._scene.callMenu()
+              SceneManager._scene.callMenu();
               break;
           }
         }
@@ -370,32 +377,32 @@ const MOVEMENT_TIME = 250; // ms
            */
           const commandMap = {
             close: 'escape',
-            enter: 'ok'
-          }
+            enter: 'ok',
+          };
 
-          Input._currentState[commandMap[state.command]] = true
+          Input._currentState[commandMap[state.command]] = true;
           setTimeout(() => {
-            Input._currentState[commandMap[state.command]] = false
-          }, 50)
+            Input._currentState[commandMap[state.command]] = false;
+          }, 50);
         }
       },
     };
     assistantCanvas.ready(callbacks);
 
-    const BitmapLoad = Bitmap.load
+    const bitmapLoad = Bitmap.load;
     Bitmap.load = function(url) {
-      const bitmap = BitmapLoad(url)
-      bitmap._image.crossOrigin = 'anonymous'
-      return bitmap
-    }
+      const bitmap = bitmapLoad(url);
+      bitmap._image.crossOrigin = 'anonymous';
+      return bitmap;
+    };
 
     // Move the Battle Log slightly further on page to not be obscured by banner
     BattleManager.setLogWindow = function(logWindow) {
-      logWindow.y = 100 // 100px
-      BattleManager._logWindow = logWindow
-      return logWindow
-  };
+      logWindow.y = 100; // 100px
+      BattleManager._logWindow = logWindow;
+      return logWindow;
+    };
 
     console.log('Canvas loaded');
-  })
+  });
 })();

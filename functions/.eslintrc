@@ -1,0 +1,17 @@
+{
+    "extends": ["eslint:recommended", "google"],
+    "plugins": [
+        "actions-on-google"
+    ],
+    "rules": {
+        "actions-on-google/at-most-two-simple-responses": "error",
+        "actions-on-google/first-item-simple-or-helper-response": "error"
+    },
+    "parserOptions": {
+        "ecmaVersion": 2017
+    },
+    "env": {
+        "es6": true,
+        "node": true
+    }
+}

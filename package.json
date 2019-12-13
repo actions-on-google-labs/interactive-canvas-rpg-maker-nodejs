@@ -1,0 +1,20 @@
+{
+    "name": "rogue-like-me",
+    "description": "Local integration for Rogue Like Me computer game",
+    "version": "0.0.1",
+    "private": true,
+    "license": "Apache Version 2.0",
+    "author": "Google Inc.",
+    "engines": {
+      "node": "8"
+    },
+    "scripts": {
+      "lint": "./node_modules/eslint/bin/eslint.js canvas-plugin.js",
+      "test": "npm run lint"
+    },
+    "dependencies": {},
+    "devDependencies": {
+      "eslint": "^6.7.2",
+      "eslint-config-google": "^0.14.0"
+    }
+  }
